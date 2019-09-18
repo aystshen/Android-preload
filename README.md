@@ -1,19 +1,18 @@
 # preload
 
-此仓库解决Android内置文件问题，默认文件存在system/preload目录，此脚本开机启动将system/preload目录中文件copy到sdcard/preload目录。
+This repository solves the problem of Android built-in files. The default file exists in the system/preload directory. This script starts and copies the files in the system/preload directory to the sdcard directory.
 
-## 使用
-#### 1. 将preload目录copy至vendor/rockchip/common/下
+## Usage
+1. Copy the preload directory to vendor/rockchip/common/.
 ```
-shenhb@dqrd01:~/code/topband_rk3128/vendor/rockchip/common/preload$ tree
+shenhb@dqrd01:~/vendor/rockchip/common/preload$ tree
 .
 ├── Android.mk
 ├── preload
-│   └── README.md
 ├── preload.mk
 └── preload.sh
 ```
-#### 2. 修改device/rockchip/common/init.rockchip.rc，增加下面代码：
+2. Modify device/rockchip/common/init.rockchip.rc and add the following code:
 ```
 #preload
 service preload /system/xbin/preload.sh
@@ -22,13 +21,39 @@ service preload /system/xbin/preload.sh
     group media_rw
     oneshot
 ```
-#### 3. 修改vendor/rockchip/common/BoardConfigVendor.mk，增加下面代码：
+3. Modify vendor/rockchip/common/BoardConfigVendor.mk and add the following code:
 ```
 PRODUCT_HAVE_PRELOAD ?= true
 ```
-#### 4. 修改vendor/rockchip/common/device-vendor.mk，增加下面代码：
+4. Modify vendor/rockchip/common/device-vendor.mk and add the following code:
 ```
 ifeq ($(PRODUCT_HAVE_PRELOAD),true)
 $(call inherit-product-if-exists, vendor/rockchip/common/preload/preload.mk)
 endif
+```
+
+### For SEAndroid
+1. Modify device/rockchip/common/init.rockchip.rc and add the following code:
+```   
+#preload
+service preload /system/xbin/preload.sh
+    class late_start
+    user root
+    group media_rw
+    oneshot
+```
+2. Modify device/rockchip/common/sepolicy/file_contexts and add the following code:
+```
+# for preload
+/system/xbin/preload.sh            u:object_r:preload_exec:s0
+```
+3. Modify device/rockchip/common/sepolicy/init.te and add the following code:
+```
+domain_trans(init, preload_exec, preload)
+```
+4. Add device/rockchip/common/sepolicy/preload.te file.
+```
+type preload, domain, coredomain, mlstrustedsubject;
+type preload_exec, exec_type, vendor_file_type, file_type;
+init_daemon_domain(preload)
 ```
