@@ -1,4 +1,4 @@
-# preload
+# Android-preload
 
 This repository solves the problem of Android built-in files. The default file exists in the system/preload directory. This script starts and copies the files in the system/preload directory to the sdcard directory.
 
@@ -56,4 +56,24 @@ domain_trans(init, preload_exec, preload)
 type preload, domain, coredomain, mlstrustedsubject;
 type preload_exec, exec_type, vendor_file_type, file_type;
 init_daemon_domain(preload)
+```
+
+## Developer
+* ayst.shen@foxmail.com
+
+## License
+```
+Copyright 2019 Bob Shen
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may 
+not use this file except in compliance with the License. You may obtain 
+a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software 
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT 
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the 
+License for the specific language governing permissions and limitations 
+under the License.
 ```
